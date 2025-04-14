@@ -86,7 +86,8 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
   const { notify } = useContext(ToastContext)
   const { dataset } = useDatasetDetailContext()
   const embeddingAvailable = !!dataset?.embedding_available
-  const [showMetadata, setShowMetadata] = useState(!isMobile)
+  const [ setShowMetadata] = useState(!isMobile)
+  const showMetadata = false;
   const [newSegmentModalVisible, setNewSegmentModalVisible] = useState(false)
   const [batchModalVisible, setBatchModalVisible] = useState(false)
   const [importStatus, setImportStatus] = useState<ProcessStatus | string>()
@@ -240,7 +241,7 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
               onUpdate={handleOperate}
               className='!w-[200px]'
             />
-            <button
+            {/* <button
               className={style.layoutRightIcon}
               onClick={() => setShowMetadata(!showMetadata)}
             >
@@ -249,7 +250,7 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
                   ? <LayoutRight2LineMod className='w-4 h-4 text-components-button-secondary-text' />
                   : <RiLayoutRight2Line className='w-4 h-4 text-components-button-secondary-text' />
               }
-            </button>
+            </button> */}
           </div>
         </div>
         <div className='flex flex-row flex-1' style={{ height: 'calc(100% - 4rem)' }}>

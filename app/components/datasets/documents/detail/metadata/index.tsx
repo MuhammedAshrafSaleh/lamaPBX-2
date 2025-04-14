@@ -12,7 +12,7 @@ import Input from '@/app/components/base/input'
 import Button from '@/app/components/base/button'
 import Tooltip from '@/app/components/base/tooltip'
 import Radio from '@/app/components/base/radio'
-import Divider from '@/app/components/base/divider'
+
 import { ToastContext } from '@/app/components/base/toast'
 import { SimpleSelect } from '@/app/components/base/select'
 import Loading from '@/app/components/base/loading'
@@ -363,11 +363,7 @@ const Metadata: FC<IMetadataProps> = ({ docDetail, loading, onUpdate }) => {
             {(!doc_type && showDocTypes) ? null : <Divider />}
             {showDocTypes ? renderSelectDocType() : renderFieldInfos({ mainField: metadataParams.documentType, canEdit: editStatus })}
             {/* show fixed fields */}
-            <Divider />
-            {renderFieldInfos({ mainField: 'originInfo', canEdit: false })}
-            <div className={`${s.title} mt-8`}>{metadataMap.technicalParameters.text}</div>
-            <Divider />
-            {renderFieldInfos({ mainField: 'technicalParameters', canEdit: false })}
+            
           </>
         )}
     </div>

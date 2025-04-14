@@ -1,7 +1,7 @@
 const translation = {
   list: {
     title: 'Documents',
-    desc: 'All files of the Knowledge are shown here, and the entire Knowledge can be linked to Dify citations or indexed via the Chat plugin.',
+    desc: '',
     learnMore: '',
     addFile: 'Add file',
     addPages: 'Add Pages',
@@ -82,7 +82,7 @@ const translation = {
   },
   metadata: {
     title: 'Metadata',
-    desc: 'Labeling metadata for documents allows AI to access them in a timely manner and exposes the source of references for users.',
+    desc: '',
     dateTimeFormat: 'MMMM D, YYYY hh:mm A',
     docTypeSelectTitle: 'Please select a document type',
     docTypeChangeTitle: 'Change document type',
