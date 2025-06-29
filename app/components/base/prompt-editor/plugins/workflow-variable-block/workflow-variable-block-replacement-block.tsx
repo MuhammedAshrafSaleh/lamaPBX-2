@@ -1,4 +1,4 @@
-import {
+import {                          
   memo,
   useCallback,
   useEffect,
@@ -12,7 +12,14 @@ import type { WorkflowVariableBlockType } from '../../types'
 import { CustomTextNode } from '../custom-text/node'
 import { $createWorkflowVariableBlockNode } from './node'
 import { WorkflowVariableBlockNode } from './index'
-import { VAR_REGEX as REGEX, resetReg } from '@/config'
+import { VAR_REGEX as REGEX } from '@/config'
+
+// تعريف دالة resetReg محلياً إذا لم تكن متوفرة من '@/config'
+const resetReg = () => {
+  if (REGEX) {
+    REGEX.lastIndex = 0
+  }
+}
 
 const WorkflowVariableBlockReplacementBlock = ({
   workflowNodesMap,
@@ -20,44 +27,68 @@ const WorkflowVariableBlockReplacementBlock = ({
 }: WorkflowVariableBlockType) => {
   const [editor] = useLexicalComposerContext()
 
+  // التحقق من تسجيل العقدة
   useEffect(() => {
-    if (!editor.hasNodes([WorkflowVariableBlockNode]))
-      throw new Error('WorkflowVariableBlockNodePlugin: WorkflowVariableBlockNode not registered on editor')
+    if (!editor.hasNodes([WorkflowVariableBlockNode])) {
+      throw new Error(
+        'WorkflowVariableBlockNodePlugin: WorkflowVariableBlockNode not registered on editor'
+      )
+    }
   }, [editor])
 
-  const createWorkflowVariableBlockNode = useCallback((textNode: TextNode): WorkflowVariableBlockNode => {
-    if (onInsert)
-      onInsert()
+  // إنشاء عقدة متغير Workflow
+  const createWorkflowVariableBlockNode = useCallback(
+    (textNode: TextNode): WorkflowVariableBlockNode => {
+      if (onInsert) {
+        onInsert()
+      }
 
-    const nodePathString = textNode.getTextContent().slice(3, -3)
-    return $applyNodeReplacement($createWorkflowVariableBlockNode(nodePathString.split('.'), workflowNodesMap))
-  }, [onInsert, workflowNodesMap])
+      const nodePathString = textNode.getTextContent().slice(3, -3)
+      return $applyNodeReplacement(
+        $createWorkflowVariableBlockNode(
+          nodePathString.split('.'),
+          workflowNodesMap
+        )
+      )
+    },
+    [onInsert, workflowNodesMap]
+  )
 
+  // الحصول على التطابق للنص
   const getMatch = useCallback((text: string) => {
+    resetReg() // إعادة تعيين REGEX قبل الاستخدام
     const matchArr = REGEX.exec(text)
 
-    if (matchArr === null)
+    if (matchArr === null) {
       return null
+    }
 
-    const startOffset = matchArr.index
-    const endOffset = startOffset + matchArr[0].length
     return {
-      end: endOffset,
-      start: startOffset,
+      start: matchArr.index,
+      end: matchArr.index + matchArr[0].length,
     }
   }, [])
 
-  const transformListener = useCallback((textNode: any) => {
-    resetReg()
-    return decoratorTransform(textNode, getMatch, createWorkflowVariableBlockNode)
-  }, [createWorkflowVariableBlockNode, getMatch])
+  // مستمع لتحويل النص
+  const transformListener = useCallback(
+    (textNode: TextNode) => {
+      resetReg() // إعادة تعيين REGEX قبل التحويل
+      return decoratorTransform(
+        textNode,
+        getMatch,
+        createWorkflowVariableBlockNode
+      )
+    },
+    [createWorkflowVariableBlockNode, getMatch]
+  )
 
+  // تسجيل التحويل
   useEffect(() => {
-    resetReg()
+    resetReg() // إعادة تعيين REGEX عند التحميل
     return mergeRegister(
-      editor.registerNodeTransform(CustomTextNode, transformListener),
+      editor.registerNodeTransform(CustomTextNode, transformListener)
     )
-  }, [])
+  }, [editor, transformListener])
 
   return null
 }

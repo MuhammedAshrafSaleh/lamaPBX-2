@@ -108,10 +108,10 @@ const Configuration: FC = () => {
   const [introduction, setIntroduction] = useState<string>('')
   const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([])
   const [controlClearChatMessage, setControlClearChatMessage] = useState(0)
-  const [prevPromptConfig, setPrevPromptConfig] = useState<PromptConfig>({
-    prompt_template: '',
-    prompt_variables: [],
-  })
+  // const [prevPromptConfig, setPrevPromptConfig] = useState<PromptConfig>({
+  //   prompt_template: '',
+  //   prompt_variables: [],
+  // })
   const [moreLikeThisConfig, setMoreLikeThisConfig] = useState<MoreLikeThisConfig>({
     enabled: false,
   })
@@ -489,12 +489,12 @@ const Configuration: FC = () => {
     if (flag)
       formattingChangedDispatcher()
   }, [formattingChangedDispatcher, setShowAppConfigureFeaturesModal])
-  const handleAddPromptVariable = useCallback((variable: PromptVariable[]) => {
-    const newModelConfig = produce(modelConfig, (draft: ModelConfig) => {
-      draft.configs.prompt_variables = variable
-    })
-    setModelConfig(newModelConfig)
-  }, [modelConfig])
+  // const handleAddPromptVariable = useCallback((variable: PromptVariable[]) => {
+  //   const newModelConfig = produce(modelConfig, (draft: ModelConfig) => {
+  //     draft.configs.prompt_variables = variable
+  //   })
+  //   setModelConfig(newModelConfig)
+  // }, [modelConfig])
 
   useEffect(() => {
     (async () => {
@@ -825,8 +825,8 @@ const Configuration: FC = () => {
       setConversationId,
       controlClearChatMessage,
       setControlClearChatMessage,
-      prevPromptConfig,
-      setPrevPromptConfig,
+      // prevPromptConfig,
+      // setPrevPromptConfig,
       moreLikeThisConfig,
       setMoreLikeThisConfig,
       suggestedQuestionsAfterAnswerConfig,
@@ -936,10 +936,10 @@ const Configuration: FC = () => {
                   </div>
                 </div>
               </div>
-              <div className={`w-full sm:w-1/2 shrink-0 flex flex-col h-full ${debugWithMultipleModel && 'max-w-[560px]'}`}>
+              <div className={`w-full sm:w-2/3 shrink-0 flex flex-col h-full ${debugWithMultipleModel && 'max-w-[460px]'}`}>
                 <Config />
               </div>
-              {!isMobile && <div className="relative flex flex-col w-1/2 h-full overflow-y-auto grow " style={{ borderColor: 'rgba(0, 0, 0, 0.02)' }}>
+              {!isMobile && <div className="relative flex flex-col w-1/3 h-full overflow-y-auto grow " style={{ borderColor: 'rgba(0, 0, 0, 0.02)' }}>
                 <div className='grow flex flex-col border-t-[0.5px] border-l-[0.5px] rounded-tl-2xl border-components-panel-border bg-chatbot-bg '>
                   <Debug
                     isAPIKeySet={isAPIKeySet}
@@ -1016,8 +1016,8 @@ const Configuration: FC = () => {
               disabled={false}
               onChange={handleFeaturesChange}
               onClose={() => setShowAppConfigureFeaturesModal(false)}
-              promptVariables={modelConfig.configs.prompt_variables}
-              onAutoAddPromptVariable={handleAddPromptVariable}
+              // promptVariables={modelConfig.configs.prompt_variables}
+              // onAutoAddPromptVariable={handleAddPromptVariable}
             />
           )}
         </>

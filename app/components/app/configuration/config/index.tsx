@@ -11,7 +11,7 @@ import ConfigDocument from './config-document'
 import AgentTools from './agent/agent-tools'
 import ConfigContext from '@/context/debug-configuration'
 import ConfigPrompt from '@/app/components/app/configuration/config-prompt'
-import ConfigVar from '@/app/components/app/configuration/config-var'
+// import ConfigVar from '@/app/components/app/configuration/config-var'
 import { type ModelConfig, type PromptVariable } from '@/models/debug'
 import type { AppType } from '@/types/app'
 import { ModelModeType } from '@/types/app'
@@ -33,7 +33,7 @@ const Config: FC = () => {
 
   const promptTemplate = modelConfig.configs.prompt_template
   const promptVariables = modelConfig.configs.prompt_variables
-  // simple mode
+  
   const handlePromptChange = (newTemplate: string, newVariables: PromptVariable[]) => {
     const newModelConfig = produce(modelConfig, (draft: ModelConfig) => {
       draft.configs.prompt_template = newTemplate
@@ -46,32 +46,41 @@ const Config: FC = () => {
     setModelConfig(newModelConfig)
   }
 
-  const handlePromptVariablesNameChange = (newVariables: PromptVariable[]) => {
-    setPrevPromptConfig(modelConfig.configs)
-    const newModelConfig = produce(modelConfig, (draft: ModelConfig) => {
-      draft.configs.prompt_variables = newVariables
-    })
-    setModelConfig(newModelConfig)
-  }
+  // const handlePromptVariablesNameChange = (newVariables: PromptVariable[]) => {
+  //   setPrevPromptConfig(modelConfig.configs)
+  //   const newModelConfig = produce(modelConfig, (draft: ModelConfig) => {
+  //     draft.configs.prompt_variables = newVariables
+  //   })
+  //   setModelConfig(newModelConfig)
+  // }
 
   return (
     <>
       <div
         className="grow h-0 relative px-6 pb-[50px] overflow-y-auto"
+        style={{
+          transform: 'translateX(25%)',
+          width: '75%',
+          minWidth: '75%',
+          maxWidth: '25%',
+        }}
       >
         {/* Template */}
+        
         <ConfigPrompt
           mode={mode as AppType}
           promptTemplate={promptTemplate}
           promptVariables={promptVariables}
           onChange={handlePromptChange}
+        
+        
         />
 
-        {/* Variables */}
+        {/* Variables
         <ConfigVar
           promptVariables={promptVariables}
           onPromptVariablesChange={handlePromptVariablesNameChange}
-        />
+        /> */}
 
         {/* Dataset */}
         <DatasetConfig />

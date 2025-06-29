@@ -204,24 +204,26 @@ const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     return <Loading type='app' />
 
   return (
-    <div className='grow flex overflow-hidden'>
-      {!hideSideBar && <AppSideBar
-        title={datasetRes?.name || '--'}
-        icon={datasetRes?.icon || 'https://static.dify.ai/images/dataset-default-icon.png'}
-        icon_background={datasetRes?.icon_background || '#F5F5F5'}
-        desc={datasetRes?.description || '--'}
-        isExternal={datasetRes?.provider === 'external'}
-        navigation={navigation}
-        extraInfo={!isCurrentWorkspaceDatasetOperator ? mode => <ExtraInfo isMobile={mode === 'collapse'} relatedApps={relatedApps} expand={mode === 'collapse'} /> : undefined}
-        iconType={datasetRes?.data_source_type === DataSourceType.NOTION ? 'notion' : 'dataset'}
-      />}
-      <DatasetDetailContext.Provider value={{
-        indexingTechnique: datasetRes?.indexing_technique,
-        dataset: datasetRes,
-        mutateDatasetRes: () => mutateDatasetRes(),
-      }}>
-        <div className="bg-background-default-subtle grow overflow-hidden">{children}</div>
-      </DatasetDetailContext.Provider>
+    <div className='grow flex overflow-hidden justify-end'>
+      <div className='w-[86%] flex overflow-hidden'>
+        {!hideSideBar && <AppSideBar
+          title={datasetRes?.name || '--'}
+          icon={datasetRes?.icon || 'https://static.dify.ai/images/dataset-default-icon.png'}
+          icon_background={datasetRes?.icon_background || '#F5F5F5'}
+          desc={datasetRes?.description || '--'}
+          isExternal={datasetRes?.provider === 'external'}
+          navigation={navigation}
+          extraInfo={!isCurrentWorkspaceDatasetOperator ? mode => <ExtraInfo isMobile={mode === 'collapse'} relatedApps={relatedApps} expand={mode === 'collapse'} /> : undefined}
+          iconType={datasetRes?.data_source_type === DataSourceType.NOTION ? 'notion' : 'dataset'}
+        />}
+        <DatasetDetailContext.Provider value={{
+          indexingTechnique: datasetRes?.indexing_technique,
+          dataset: datasetRes,
+          mutateDatasetRes: () => mutateDatasetRes(),
+        }}>
+          <div className="bg-background-default-subtle grow overflow-hidden">{children}</div>
+        </DatasetDetailContext.Provider>
+      </div>
     </div>
   )
 }

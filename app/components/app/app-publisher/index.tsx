@@ -1,4 +1,4 @@
-import {
+import { 
   memo,
   useCallback,
   useState,
@@ -23,7 +23,6 @@ import { useGetLanguage } from '@/context/i18n'
 import { PlayCircle } from '@/app/components/base/icons/src/vender/line/mediaAndDevices'
 import { CodeBrowser } from '@/app/components/base/icons/src/vender/line/development'
 import { LeftIndent02 } from '@/app/components/base/icons/src/vender/line/editor'
-import { FileText } from '@/app/components/base/icons/src/vender/line/files'
 import WorkflowToolConfigureButton from '@/app/components/tools/workflow-tool/configure-button'
 import type { InputVar } from '@/app/components/workflow/types'
 import { appDefaultIconBackground } from '@/config'
@@ -177,7 +176,6 @@ const AppPublisher = ({
                 <PublishWithMultipleModel
                   multipleModelConfigs={multipleModelConfigs}
                   onSelect={item => handlePublish(item)}
-                // textGenerationModelList={textGenerationModelList}
                 />
               )
               : (
@@ -229,7 +227,6 @@ const AppPublisher = ({
             >
               {t('workflow.common.openInExplore')}
             </SuggestedAction>
-            <SuggestedAction disabled={!publishedAt} link='./develop' icon={<FileText className='w-4 h-4' />}>{t('workflow.common.accessAPIReference')}</SuggestedAction>
             {appDetail?.mode === 'workflow' && (
               <WorkflowToolConfigureButton
                 disabled={!publishedAt}
@@ -257,7 +254,7 @@ const AppPublisher = ({
         appBaseUrl={appBaseURL}
         accessToken={accessToken}
       />
-    </PortalToFollowElem >
+    </PortalToFollowElem>
   )
 }
 

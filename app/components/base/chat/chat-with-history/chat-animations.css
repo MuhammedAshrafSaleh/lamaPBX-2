@@ -1,0 +1,55 @@
+.welcome-bot {
+  width: 120px;
+  height: 120px;
+  background-color: #5179a7; /* لون أزرق فاتح */
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.bot-face {
+  width: 60%;
+  height: 60%;
+  position: relative;
+}
+
+.bot-eye {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(215, 205, 205);
+  border-radius: 50%;
+  position: absolute;
+  top: 20%;
+}
+
+.left-eye {
+  left: 0;
+}
+
+.right-eye {
+  right: 0;
+}
+
+.bot-mouth {
+  width: 40px;
+  height: 20px; /* جعل الفم أكبر قليلاً للابتسامة */
+  background-color: rgb(214, 202, 202);
+  border-radius: 0 0 20px 20px; /* جعل الفم مبتسماً */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}

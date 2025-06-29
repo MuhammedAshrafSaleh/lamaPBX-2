@@ -531,7 +531,7 @@ const translation = {
     inputPlaceholder: 'Talk to Bot',
   },
   promptEditor: {
-    placeholder: 'Write your prompt word here, enter \'{\' to insert a variable, enter \'/\' to insert a prompt content block',
+    placeholder: 'Write your prompt word here',
     context: {
       item: {
         title: 'Context',

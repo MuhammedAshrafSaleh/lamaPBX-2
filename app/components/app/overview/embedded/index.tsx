@@ -29,38 +29,7 @@ const OPTION_MAP = {
  frameborder="0"
  allow="microphone">
 </iframe>`,
-  },
-  scripts: {
-    getContent: (url: string, token: string, primaryColor: string, isTestEnv?: boolean) =>
-      `<script>
- window.difyChatbotConfig = {
-  token: '${token}'${isTestEnv
-  ? `,
-  isDev: true`
-  : ''}${IS_CE_EDITION
-  ? `,
-  baseUrl: '${url}'`
-  : ''}
- }
-</script>
-<script
- src="${url}/embed.min.js"
- id="${token}"
- defer>
-</script>
-<style>
-  #dify-chatbot-bubble-button {
-    background-color: ${primaryColor} !important;
   }
-  #dify-chatbot-bubble-window {
-    width: 24rem !important;
-    height: 40rem !important;
-  }
-</style>`,
-  },
-  chromePlugin: {
-    getContent: (url: string, token: string) => `ChatBot URL: ${url}/chatbot/${token}`,
-  },
 }
 const prefixEmbedded = 'appOverview.overview.appInfo.embedded'
 
@@ -68,28 +37,19 @@ type Option = keyof typeof OPTION_MAP
 
 type OptionStatus = {
   iframe: boolean
-  scripts: boolean
-  chromePlugin: boolean
 }
 
 const Embedded = ({ siteInfo, isShow, onClose, appBaseUrl, accessToken, className }: Props) => {
   const { t } = useTranslation()
   const [option, setOption] = useState<Option>('iframe')
-  const [isCopied, setIsCopied] = useState<OptionStatus>({ iframe: false, scripts: false, chromePlugin: false })
+  const [isCopied, setIsCopied] = useState<OptionStatus>({ iframe: false })
 
   const { langeniusVersionInfo } = useAppContext()
   const themeBuilder = useThemeContext()
   themeBuilder.buildTheme(siteInfo?.chat_color_theme ?? null, siteInfo?.chat_color_theme_inverted ?? false)
   const isTestEnv = langeniusVersionInfo.current_env === 'TESTING' || langeniusVersionInfo.current_env === 'DEVELOPMENT'
   const onClickCopy = () => {
-    if (option === 'chromePlugin') {
-      const splitUrl = OPTION_MAP[option].getContent(appBaseUrl, accessToken).split(': ')
-      if (splitUrl.length > 1)
-        copy(splitUrl[1])
-    }
-    else {
-      copy(OPTION_MAP[option].getContent(appBaseUrl, accessToken, themeBuilder.theme?.primaryColor ?? '#1C64F2', isTestEnv))
-    }
+    copy(OPTION_MAP[option].getContent(appBaseUrl, accessToken))
     setIsCopied({ ...isCopied, [option]: true })
   }
 
@@ -100,10 +60,6 @@ const Embedded = ({ siteInfo, isShow, onClose, appBaseUrl, accessToken, classNam
       cache[key as keyof OptionStatus] = false
     })
     setIsCopied(cache)
-  }
-
-  const navigateToChromeUrl = () => {
-    window.open('https://chrome.google.com/webstore/detail/dify-chatbot/ceehdapohffmjmkdcifjofadiaoeggaf', '_blank')
   }
 
   useEffect(() => {
@@ -122,7 +78,7 @@ const Embedded = ({ siteInfo, isShow, onClose, appBaseUrl, accessToken, classNam
       <div className="mb-4 mt-8 text-gray-900 text-[14px] font-medium leading-tight">
         {t(`${prefixEmbedded}.explanation`)}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-y-2">
+      <div className="flex items-start justify-start gap-y-2">
         {Object.keys(OPTION_MAP).map((v, index) => {
           return (
             <div
@@ -140,15 +96,6 @@ const Embedded = ({ siteInfo, isShow, onClose, appBaseUrl, accessToken, classNam
           )
         })}
       </div>
-      {option === 'chromePlugin' && (
-        <div className="w-full mt-6">
-          <div className={cn('gap-2 py-3 justify-center items-center inline-flex w-full rounded-lg',
-            'bg-primary-600 hover:bg-primary-600/75 hover:shadow-md cursor-pointer text-white hover:shadow-sm flex-shrink-0')}>
-            <div className={`w-4 h-4 relative ${style.pluginInstallIcon}`}></div>
-            <div className="text-white text-sm font-medium font-['Inter'] leading-tight" onClick={navigateToChromeUrl}>{t(`${prefixEmbedded}.chromePlugin`)}</div>
-          </div>
-        </div>
-      )}
       <div className={cn('w-full bg-gray-100 rounded-lg flex-col justify-start items-start inline-flex',
         'mt-6')}>
         <div className="inline-flex items-center self-stretch justify-start gap-2 py-1 pl-3 pr-1 border border-black rounded-tl-lg rounded-tr-lg bg-gray-50 border-opacity-5">
@@ -167,7 +114,7 @@ const Embedded = ({ siteInfo, isShow, onClose, appBaseUrl, accessToken, classNam
         </div>
         <div className="flex items-start justify-start w-full gap-2 p-3 overflow-x-auto">
           <div className="grow shrink basis-0 text-slate-700 text-[13px] leading-tight font-mono">
-            <pre className='select-text'>{OPTION_MAP[option].getContent(appBaseUrl, accessToken, themeBuilder.theme?.primaryColor ?? '#1C64F2', isTestEnv)}</pre>
+            <pre className='select-text'>{OPTION_MAP[option].getContent(appBaseUrl, accessToken)}</pre>
           </div>
         </div>
       </div>

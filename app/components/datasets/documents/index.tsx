@@ -185,38 +185,38 @@ const Documents: FC<IDocumentsProps> = ({ datasetId }) => {
         pages: workspacesMap[workspaceId],
       }
     })
-    const params = {
-      data_source: {
-        type: dataset?.data_source_type,
-        info_list: {
-          data_source_type: dataset?.data_source_type,
-          notion_info_list: workspaces.map((workspace) => {
-            return {
-              workspace_id: workspace.workspaceId,
-              pages: workspace.pages.map((page) => {
-                const { page_id, page_name, page_icon, type } = page
-                return {
-                  page_id,
-                  page_name,
-                  page_icon,
-                  type,
-                }
-              }),
-            }
-          }),
-        },
-      },
-      indexing_technique: dataset?.indexing_technique,
-      process_rule: {
-        rules: {},
-        mode: 'automatic',
-      },
-    } as CreateDocumentReq
+    // const params = {
+    //   data_source: {
+    //     type: dataset?.data_source_type,
+    //     info_list: {
+    //       data_source_type: dataset?.data_source_type,
+    //       notion_info_list: workspaces.map((workspace) => {
+    //         return {
+    //           workspace_id: workspace.workspaceId,
+    //           pages: workspace.pages.map((page) => {
+    //             const { page_id, page_name, page_icon, type } = page
+    //             return {
+    //               page_id,
+    //               page_name,
+    //               page_icon,
+    //               type,
+    //             }
+    //           }),
+    //         }
+    //       }),
+    //     },
+    //   },
+    //   indexing_technique: dataset?.indexing_technique,
+    //   process_rule: {
+    //     rules: {},
+    //     mode: 'automatic',
+    //   },
+    // } as CreateDocumentReq
 
-    await createDocument({
-      datasetId,
-      body: params,
-    })
+    // await createDocument({
+    //   datasetId,
+    //   body: params,
+    // })
     mutate()
     setTimerCanRun(true)
     // mutateDatasetIndexingStatus(undefined, { revalidate: true })
