@@ -73,7 +73,7 @@
         box-shadow: rgba(150, 150, 150, 0.2) 0px 10px 30px 0px, rgba(150, 150, 150, 0.2) 0px 0px 0px 1px;
         bottom: 55px; right: 0; width: 24rem; max-width: calc(100vw - 2rem); height: 40rem;
         max-height: calc(100vh - 6rem); border-radius: 0.75rem; display: flex; z-index: 2147483647;
-        overflow: hidden; left: unset; background-color: #F3F4F6;user-select: none;
+        overflow: hidden; left: unset; background-color:rgb(245, 241, 241);user-select: none;
       `;
 
       return iframe;

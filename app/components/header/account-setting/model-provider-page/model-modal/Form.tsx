@@ -7,16 +7,15 @@ import type {
   CredentialFormSchemaRadio,
   CredentialFormSchemaSecretInput,
   CredentialFormSchemaSelect,
-  CredentialFormSchemaTextInput,
   FormValue,
 } from '../declarations'
 import { FormTypeEnum } from '../declarations'
 import { useLanguage } from '../hooks'
 import Input from './Input'
 import cn from '@/utils/classnames'
-import { SimpleSelect } from '@/app/components/base/select'
 import Tooltip from '@/app/components/base/tooltip'
 import Radio from '@/app/components/base/radio'
+
 type FormProps = {
   className?: string
   itemClassName?: string
@@ -52,6 +51,7 @@ const Form: FC<FormProps> = ({
 }) => {
   const language = useLanguage()
   const [changeKey, setChangeKey] = useState('')
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   const handleFormChange = (key: string, val: string | boolean) => {
     if (isEditMode && (key === '__model_type' || key === '__model_name'))
@@ -67,6 +67,104 @@ const Form: FC<FormProps> = ({
     onChange({ ...value, [key]: val, ...shouldClearVariable })
   }
 
+  const toggleDropdown = (variable: string) => {
+    if (openDropdown === variable) {
+      setOpenDropdown(null)
+    } else {
+      setOpenDropdown(variable)
+    }
+  }
+
+  // Custom dropdown component with visible borders and no blue effects
+  const CustomDropdown = ({ 
+    variable, 
+    options, 
+    selectedValue, 
+    placeholder, 
+    label,
+    disabled,
+    onChange 
+  }) => {
+    const isOpen = openDropdown === variable
+    
+    // Get placeholder text - use format "Select your X" based on label or variable name
+    let placeholderText = 'Select an option'
+    if (placeholder) {
+      placeholderText = placeholder[language] || placeholder.en_US
+    } else if (label) {
+      const labelText = label[language] || label.en_US
+      placeholderText = `Select your ${labelText.toLowerCase()}`
+    } else {
+      // Fallback to variable name formatted nicely
+      const formattedVar = variable.replace('__', '').replace(/_/g, ' ')
+      placeholderText = `Select your ${formattedVar}`
+    }
+
+    // Find the currently selected option for display
+    const selectedOption = options.find(option => selectedValue === option.value)
+
+    return (
+      <div className="relative w-full">
+        {/* Dropdown header with always visible borders */}
+        <div 
+          className={cn(
+            "flex items-center justify-between px-3 py-1.5 rounded-lg border-2 border-gray-400 bg-white cursor-pointer transition-colors duration-200",
+            "hover:border-gray-500",
+            disabled ? "cursor-not-allowed opacity-60 hover:border-gray-400" : ""
+          )}
+          onClick={() => !disabled && toggleDropdown(variable)}
+        >
+          <div className={cn(
+            "text-sm",
+            selectedOption ? "text-gray-900" : "text-gray-500"
+          )}>
+            {selectedOption ? (selectedOption.label[language] || selectedOption.label.en_US) : placeholderText}
+          </div>
+          <div className={cn(
+            "text-gray-500 transition-transform duration-200",
+            isOpen ? "transform rotate-180" : ""
+          )}>
+            ▼
+          </div>
+        </div>
+        
+        {/* Dropdown options with visible borders */}
+        {isOpen && !disabled && (
+          <div className="absolute z-50 mt-1 w-full bg-white border-2 border-gray-400 rounded-lg shadow-lg max-h-60 overflow-auto">
+            {options.map((option, index) => (
+              <div
+                key={`${variable}-${option.value}`}
+                className={cn(
+                  "flex items-center px-3 py-2.5 cursor-pointer transition-colors duration-150",
+                  "hover:bg-gray-50 hover:text-gray-900",
+                  selectedValue === option.value ? "bg-gray-100 text-gray-900 font-medium" : "text-gray-900",
+                  index === 0 ? "rounded-t-md" : "",
+                  index === options.length - 1 ? "rounded-b-md" : "",
+                  "border-b border-gray-100 last:border-b-0"
+                )}
+                onClick={() => {
+                  onChange(option.value)
+                  setOpenDropdown(null)
+                }}
+              >
+                <div className="text-sm">
+                  {option.label[language] || option.label.en_US}
+                </div>
+                {selectedValue === option.value && (
+                  <div className="ml-auto text-gray-900">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   const renderField = (formSchema: CredentialFormSchema) => {
     const tooltip = formSchema.tooltip
     const tooltipContent = (tooltip && (
@@ -79,6 +177,7 @@ const Form: FC<FormProps> = ({
         asChild={false}
       />
     ))
+
     if (formSchema.type === FormTypeEnum.textInput || formSchema.type === FormTypeEnum.secretInput || formSchema.type === FormTypeEnum.textNumber) {
       const {
         variable,
@@ -86,33 +185,31 @@ const Form: FC<FormProps> = ({
         placeholder,
         required,
         show_on,
-      } = formSchema as (CredentialFormSchemaTextInput | CredentialFormSchemaSecretInput)
+      } = formSchema as (CredentialFormSchemaSecretInput | CredentialFormSchemaNumberInput)
 
       if (show_on.length && !show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value))
         return null
 
       const disabled = readonly || (isEditMode && (variable === '__model_type' || variable === '__model_name'))
+
       return (
         <div key={variable} className={cn(itemClassName, 'py-3')}>
-          <div className={cn(fieldLabelClassName, 'flex items-center py-2 text-sm text-gray-900')}>
-            {label[language] || label.en_US}
-            {
-              required && (
-                <span className='ml-1 text-red-500'>*</span>
-              )
-            }
-            {tooltipContent}
+          <div className="relative w-full">
+            <input
+              className={cn(
+                inputClassName, 
+                "px-3 py-1.5 rounded-lg border-2 border-gray-400 bg-white w-full transition-colors duration-200 outline-none",
+                "hover:border-gray-500 focus:border-gray-500",
+                disabled ? 'cursor-not-allowed opacity-60 hover:border-gray-400' : ''
+              )}
+              value={(isShowDefaultValue && ((value[variable] as string) === '' || value[variable] === undefined || value[variable] === null)) ? formSchema.default : value[variable] || ''}
+              onChange={e => handleFormChange(variable, e.target.value)}
+              placeholder={placeholder?.[language] || placeholder?.en_US}
+              disabled={disabled}
+              type={formSchema.type === FormTypeEnum.textNumber ? 'number' : 'text'}
+              {...(formSchema.type === FormTypeEnum.textNumber ? { min: (formSchema as CredentialFormSchemaNumberInput).min, max: (formSchema as CredentialFormSchemaNumberInput).max } : {})}
+            />
           </div>
-          <Input
-            className={cn(inputClassName, `${disabled && 'cursor-not-allowed opacity-60'}`)}
-            value={(isShowDefaultValue && ((value[variable] as string) === '' || value[variable] === undefined || value[variable] === null)) ? formSchema.default : value[variable]}
-            onChange={val => handleFormChange(variable, val)}
-            validated={validatedSuccess}
-            placeholder={placeholder?.[language] || placeholder?.en_US}
-            disabled={disabled}
-            type={formSchema.type === FormTypeEnum.textNumber ? 'number' : 'text'}
-            {...(formSchema.type === FormTypeEnum.textNumber ? { min: (formSchema as CredentialFormSchemaNumberInput).min, max: (formSchema as CredentialFormSchemaNumberInput).max } : {})}
-          />
           {fieldMoreInfo?.(formSchema)}
           {validating && changeKey === variable && <ValidatingTip />}
         </div>
@@ -126,50 +223,32 @@ const Form: FC<FormProps> = ({
         label,
         show_on,
         required,
+        placeholder,
       } = formSchema as CredentialFormSchemaRadio
 
       if (show_on.length && !show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value))
         return null
 
-      const disabled = isEditMode && (variable === '__model_type' || variable === '__model_name')
-
+      const disabled = readonly || (isEditMode && (variable === '__model_type' || variable === '__model_name'))
+      
+      // Filter options based on show_on conditions
+      const filteredOptions = options.filter((option) => {
+        if (option.show_on.length)
+          return option.show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value)
+        return true
+      })
+      
       return (
         <div key={variable} className={cn(itemClassName, 'py-3')}>
-          <div className={cn(fieldLabelClassName, 'flex items-center py-2 text-sm text-gray-900')}>
-            {label[language] || label.en_US}
-            {
-              required && (
-                <span className='ml-1 text-red-500'>*</span>
-              )
-            }
-            {tooltipContent}
-          </div>
-          <div className={`grid grid-cols-${options?.length} gap-3`}>
-            {
-              options.filter((option) => {
-                if (option.show_on.length)
-                  return option.show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value)
-
-                return true
-              }).map(option => (
-                <div
-                  className={`
-                    flex items-center px-3 py-2 rounded-lg border border-gray-100 bg-gray-25 cursor-pointer
-                    ${value[variable] === option.value && 'bg-white border-[1.5px] border-primary-400 shadow-sm'}
-                    ${disabled && '!cursor-not-allowed opacity-60'}
-                  `}
-                  onClick={() => handleFormChange(variable, option.value)}
-                  key={`${variable}-${option.value}`}
-                >
-                  <div className={`
-                    flex justify-center items-center mr-2 w-4 h-4 border border-gray-300 rounded-full
-                    ${value[variable] === option.value && 'border-[5px] border-primary-600'}
-                  `} />
-                  <div className='text-sm text-gray-900'>{option.label[language] || option.label.en_US}</div>
-                </div>
-              ))
-            }
-          </div>
+          <CustomDropdown 
+            variable={variable}
+            options={filteredOptions}
+            selectedValue={value[variable]}
+            placeholder={placeholder}
+            label={label}
+            disabled={disabled}
+            onChange={(val) => handleFormChange(variable, val)}
+          />
           {fieldMoreInfo?.(formSchema)}
           {validating && changeKey === variable && <ValidatingTip />}
         </div>
@@ -189,30 +268,26 @@ const Form: FC<FormProps> = ({
       if (show_on.length && !show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value))
         return null
 
+      const disabled = readonly || (isEditMode && (variable === '__model_type' || variable === '__model_name'))
+
+      // Filter options based on show_on conditions
+      const filteredOptions = options.filter((option) => {
+        if (option.show_on.length)
+          return option.show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value)
+        return true
+      })
+
+      // Use our custom dropdown for consistent styling
       return (
         <div key={variable} className={cn(itemClassName, 'py-3')}>
-          <div className={cn(fieldLabelClassName, 'flex items-center py-2 text-sm text-gray-900')}>
-            {label[language] || label.en_US}
-
-            {
-              required && (
-                <span className='ml-1 text-red-500'>*</span>
-              )
-            }
-            {tooltipContent}
-          </div>
-          <SimpleSelect
-            className={cn(inputClassName)}
-            disabled={readonly}
-            defaultValue={(isShowDefaultValue && ((value[variable] as string) === '' || value[variable] === undefined || value[variable] === null)) ? formSchema.default : value[variable]}
-            items={options.filter((option) => {
-              if (option.show_on.length)
-                return option.show_on.every(showOnItem => value[showOnItem.variable] === showOnItem.value)
-
-              return true
-            }).map(option => ({ value: option.value, name: option.label[language] || option.label.en_US }))}
-            onSelect={item => handleFormChange(variable, item.value as string)}
-            placeholder={placeholder?.[language] || placeholder?.en_US}
+          <CustomDropdown 
+            variable={variable}
+            options={filteredOptions}
+            selectedValue={(isShowDefaultValue && ((value[variable] as string) === '' || value[variable] === undefined || value[variable] === null)) ? formSchema.default : value[variable]}
+            placeholder={placeholder}
+            label={label}
+            disabled={disabled}
+            onChange={(val) => handleFormChange(variable, val)}
           />
           {fieldMoreInfo?.(formSchema)}
           {validating && changeKey === variable && <ValidatingTip />}
@@ -233,16 +308,7 @@ const Form: FC<FormProps> = ({
 
       return (
         <div key={variable} className={cn(itemClassName, 'py-3')}>
-          <div className='flex items-center justify-between py-2 text-sm text-gray-900'>
-            <div className='flex items-center space-x-2'>
-              <span className={cn(fieldLabelClassName, 'flex items-center py-2 text-sm text-gray-900')}>{label[language] || label.en_US}</span>
-              {
-                required && (
-                  <span className='ml-1 text-red-500'>*</span>
-                )
-              }
-              {tooltipContent}
-            </div>
+          <div className='flex items-center justify-between py-1.5 px-3 text-sm text-gray-900 rounded-lg border-2 border-gray-400 bg-white transition-colors duration-200 hover:border-gray-500'>
             <Radio.Group
               className='flex items-center'
               value={value[variable] === null ? undefined : (value[variable] ? 1 : 0)}

@@ -1,7 +1,6 @@
-import tailwindThemeVarDefine from './themes/tailwind-theme-var-define'
-
 /** @type {import('tailwindcss').Config} */
-const config = {
+import tailwindThemeVarDefine from './themes/tailwind-theme-var-define'
+module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
@@ -30,9 +29,9 @@ const config = {
           100: '#d1e0ff',
           200: '#b2ccff',
           300: '#84adff',
-          400: '#528bff',
+          400: '#000000',
           500: '#2970ff',
-          600: '#155eef',
+          600: '#000000',
           700: '#004eeb',
           800: '#0040c1',
           900: '#00359e',
@@ -66,13 +65,12 @@ const config = {
         ...tailwindThemeVarDefine,
       },
       screens: {
-        'mobile': '100px',
+        mobile: '100px',
         // => @media (min-width: 100px) { ... }
-        'tablet': '640px', // 391
+        tablet: '640px', // 391
         // => @media (min-width: 600px) { ... }
-        'pc': '769px',
+        pc: '769px',
         // => @media (min-width: 769px) { ... }
-        '2k': '2560px',
       },
       boxShadow: {
         'xs': '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
@@ -82,11 +80,6 @@ const config = {
         'xl': '0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08)',
         '2xl': '0px 24px 48px -12px rgba(16, 24, 40, 0.18)',
         '3xl': '0px 32px 64px -12px rgba(16, 24, 40, 0.14)',
-        'status-indicator-green-shadow': '0px 2px 6px 0px var(--color-components-badge-status-light-success-halo), 0px 0px 0px 1px var(--color-components-badge-status-light-border-outer)',
-        'status-indicator-warning-shadow': '0px 2px 6px 0px var(--color-components-badge-status-light-warning-halo), 0px 0px 0px 1px var(--color-components-badge-status-light-border-outer)',
-        'status-indicator-red-shadow': '0px 2px 6px 0px var(--color-components-badge-status-light-error-halo), 0px 0px 0px 1px var(--color-components-badge-status-light-border-outer)',
-        'status-indicator-blue-shadow': '0px 2px 6px 0px var(--color-components-badge-status-light-normal-halo), 0px 0px 0px 1px var(--color-components-badge-status-light-border-outer)',
-        'status-indicator-gray-shadow': '0px 1px 2px 0px var(--color-components-badge-status-light-disabled-halo), 0px 0px 0px 1px var(--color-components-badge-status-light-border-outer)',
       },
       opacity: {
         2: '0.02',
@@ -99,18 +92,6 @@ const config = {
         'chatbot-bg': 'var(--color-chatbot-bg)',
         'chat-bubble-bg': 'var(--color-chat-bubble-bg)',
         'workflow-process-bg': 'var(--color-workflow-process-bg)',
-        'dataset-chunk-process-success-bg': 'var(--color-dataset-chunk-process-success-bg)',
-        'dataset-chunk-process-error-bg': 'var(--color-dataset-chunk-process-error-bg)',
-        'dataset-chunk-detail-card-hover-bg': 'var(--color-dataset-chunk-detail-card-hover-bg)',
-        'dataset-child-chunk-expand-btn-bg': 'var(--color-dataset-child-chunk-expand-btn-bg)',
-        'dataset-option-card-blue-gradient': 'var(--color-dataset-option-card-blue-gradient)',
-        'dataset-option-card-purple-gradient': 'var(--color-dataset-option-card-purple-gradient)',
-        'dataset-option-card-orange-gradient': 'var(--color-dataset-option-card-orange-gradient)',
-        'dataset-chunk-list-mask-bg': 'var(--color-dataset-chunk-list-mask-bg)',
-      },
-      lineClamp: {
-        '20': '20',
-        'mask-top2bottom-gray-50-to-transparent': 'var(--mask-top2bottom-gray-50-to-transparent)',
       },
     },
   },
@@ -122,5 +103,3 @@ const config = {
     preflight: false,
   },
 }
-
-export default config

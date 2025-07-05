@@ -41,8 +41,6 @@ import { ValidatedStatus } from '../../key-validator/declarations'
 import ModelLoadBalancingConfigs from '../provider-added-card/model-load-balancing-configs'
 import Form from './Form'
 import Button from '@/app/components/base/button'
-import { Lock01 } from '@/app/components/base/icons/src/vender/solid/security'
-import { LinkExternal02 } from '@/app/components/base/icons/src/vender/line/general'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
@@ -61,11 +59,36 @@ type ModelModalProps = {
 
 const ModelModal: FC<ModelModalProps> = ({
   provider,
-  configurateMethod,
+  configurateMethod: initialConfigurateMethod,
   currentCustomConfigurationModelFixedFields,
   onCancel,
   onSave,
 }) => {
+  const [configurateMethod, setConfigurateMethod] = useState<ConfigurationMethodEnum>(initialConfigurateMethod)
+  
+  const supportsCustomizableModel = useMemo(() => 
+    provider.model_credential_schema?.credential_form_schemas?.length > 0, 
+    [provider.model_credential_schema?.credential_form_schemas]
+  )
+  
+  const supportsPredefinedModel = useMemo(() => 
+    provider.provider_credential_schema?.credential_form_schemas?.length > 0,
+    [provider.provider_credential_schema?.credential_form_schemas]
+  )
+  
+  const handleConfigurateMethodChange = (method: ConfigurationMethodEnum) => {
+    if (method === ConfigurationMethodEnum.customizableModel && !supportsCustomizableModel) {
+      notify({ type: 'error', message: t('common.modelProvider.noCustomizableSupport') || 'This model does not support customizable configuration' })
+      return
+    }
+    
+    if (method === ConfigurationMethodEnum.predefinedModel && !supportsPredefinedModel) {
+      notify({ type: 'error', message: t('common.modelProvider.noPredefinedSupport') || 'This model does not support predefined configuration' })
+      return
+    }
+    
+    setConfigurateMethod(method)
+  }
   const providerFormSchemaPredefined = configurateMethod === ConfigurationMethodEnum.predefinedModel
   const {
     credentials: formSchemasValue,
@@ -106,7 +129,7 @@ const ModelModal: FC<ModelModalProps> = ({
       : [
         genModelTypeFormSchema(provider.supported_model_types),
         genModelNameFormSchema(provider.model_credential_schema?.model),
-        ...(draftConfig?.enabled ? [] : provider.model_credential_schema.credential_form_schemas),
+        ...(draftConfig?.enabled ? [] : (provider.model_credential_schema?.credential_form_schemas || [])),
       ]
   }, [
     providerFormSchemaPredefined,
@@ -270,10 +293,10 @@ const ModelModal: FC<ModelModalProps> = ({
     }
   }
 
-  const renderTitlePrefix = () => {
-    const prefix = configurateMethod === ConfigurationMethodEnum.customizableModel ? t('common.operation.add') : t('common.operation.setup')
-
-    return `${prefix} ${provider.label[language] || provider.label.en_US}`
+  const getMethodTitle = (method: ConfigurationMethodEnum) => {
+    return method === ConfigurationMethodEnum.customizableModel 
+      ? t('common.operation.add')
+      : t('common.operation.setup')
   }
 
   return (
@@ -283,8 +306,43 @@ const ModelModal: FC<ModelModalProps> = ({
           <div className='mx-2 w-[640px] max-h-[calc(100vh-120px)] bg-white shadow-xl rounded-2xl overflow-y-auto'>
             <div className='px-8 pt-8'>
               <div className='flex justify-between items-center mb-2'>
-                <div className='text-xl font-semibold text-gray-900'>{renderTitlePrefix()}</div>
+                <div className='text-xl font-semibold text-gray-900'>
+                  {`${getMethodTitle(configurateMethod)} ${provider.label[language] || provider.label.en_US}`}
+                </div>
                 <ProviderIcon provider={provider} />
+              </div>
+
+              <div className='flex flex-col mb-4'>
+                <div className='mb-2 text-sm'>
+                  {configurateMethod === ConfigurationMethodEnum.customizableModel ? (
+                    <div className='flex items-center'>
+                    </div>
+                  ) : (
+                    <div className='flex items-center'>
+                    </div>
+                  )}
+                </div>
+                
+                <div className='flex border-b'>
+                  <button 
+                    className={`py-2 px-4 ${configurateMethod === ConfigurationMethodEnum.customizableModel 
+                      ? 'border-b-2 border-blue-500 text-gray-900 font-medium' 
+                      : 'text-gray-500'}`}
+                    onClick={() => handleConfigurateMethodChange(ConfigurationMethodEnum.customizableModel)}
+                    disabled={!supportsCustomizableModel}
+                  >
+                    Add model
+                  </button>
+                  <button 
+                    className={`py-2 px-4 ${configurateMethod === ConfigurationMethodEnum.predefinedModel 
+                      ? 'border-b-2 border-blue-500 text-gray-900 font-medium' 
+                      : 'text-gray-500'}`}
+                    onClick={() => handleConfigurateMethodChange(ConfigurationMethodEnum.predefinedModel)}
+                    disabled={!supportsPredefinedModel}
+                  >
+                    Setup model
+                  </button>
+                </div>
               </div>
 
               <Form
@@ -305,23 +363,7 @@ const ModelModal: FC<ModelModalProps> = ({
                 currentCustomConfigurationModelFixedFields,
                 configurationMethod: configurateMethod,
               }} />
-
               <div className='sticky bottom-0 flex justify-between items-center mt-2 -mx-2 pt-4 px-2 pb-6 flex-wrap gap-y-2 bg-white'>
-                {
-                  (provider.help && (provider.help.title || provider.help.url))
-                    ? (
-                      <a
-                        href={provider.help?.url[language] || provider.help?.url.en_US}
-                        target='_blank' rel='noopener noreferrer'
-                        className='inline-flex items-center text-xs text-primary-600'
-                        onClick={e => !provider.help.url && e.preventDefault()}
-                      >
-                        {provider.help.title?.[language] || provider.help.url[language] || provider.help.title?.en_US || provider.help.url.en_US}
-                        <LinkExternal02 className='ml-1 w-3 h-3' />
-                      </a>
-                    )
-                    : <div />
-                }
                 <div>
                   {
                     isEditMode && (
@@ -330,7 +372,7 @@ const ModelModal: FC<ModelModalProps> = ({
                         className='mr-2 text-[#D92D20]'
                         onClick={() => setShowConfirm(true)}
                       >
-                        {t('common.operation.remove')}
+                        {t('Delete')}
                       </Button>
                     )
                   }
@@ -350,37 +392,11 @@ const ModelModal: FC<ModelModalProps> = ({
                       || filteredRequiredFormSchemas.some(item => value[item.variable] === undefined)
                       || (draftConfig?.enabled && (draftConfig?.configs.filter(config => config.enabled).length ?? 0) < 2)
                     }
-
                   >
-                    {t('common.operation.save')}
+                    {t('Save changes')}
                   </Button>
                 </div>
               </div>
-            </div>
-            <div className='border-t-[0.5px] border-t-black/5'>
-              {
-                (validatedStatusState.status === ValidatedStatus.Error && validatedStatusState.message)
-                  ? (
-                    <div className='flex px-[10px] py-3 bg-[#FEF3F2] text-xs text-[#D92D20]'>
-                      <RiErrorWarningFill className='mt-[1px] mr-2 w-[14px] h-[14px]' />
-                      {validatedStatusState.message}
-                    </div>
-                  )
-                  : (
-                    <div className='flex justify-center items-center py-3 bg-gray-50 text-xs text-gray-500'>
-                      <Lock01 className='mr-1 w-3 h-3 text-gray-500' />
-                      {t('common.modelProvider.encrypted.front')}
-                      <a
-                        className='text-primary-600 mx-1'
-                        target='_blank' rel='noopener noreferrer'
-                        href='https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html'
-                      >
-                        PKCS1_OAEP
-                      </a>
-                      {t('common.modelProvider.encrypted.back')}
-                    </div>
-                  )
-              }
             </div>
           </div>
           {

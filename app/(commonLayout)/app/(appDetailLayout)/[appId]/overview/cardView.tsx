@@ -118,23 +118,23 @@ const CardView: FC<ICardViewProps> = ({ appId }) => {
 
   if (!appDetail)
     return <Loading />
-
-  return (
-    <div className="grid gap-6 grid-cols-1 xl:grid-cols-2 w-full mb-6">
-      <AppCard
-        appInfo={appDetail}
-        cardType="webapp"
-        onChangeStatus={onChangeSiteStatus}
-        onGenerateCode={onGenerateCode}
-        onSaveSiteConfig={onSaveSiteConfig}
-      />
-      <AppCard
-        cardType="api"
-        appInfo={appDetail}
-        onChangeStatus={onChangeApiStatus}
-      />
-    </div>
-  )
+  return null;
+  // return (
+  //   <div className="grid gap-6 grid-cols-1 xl:grid-cols-2 w-full mb-6">
+  //     <AppCard
+  //       appInfo={appDetail}
+  //       cardType="webapp"
+  //       onChangeStatus={onChangeSiteStatus}
+  //       onGenerateCode={onGenerateCode}
+  //       onSaveSiteConfig={onSaveSiteConfig}
+  //     />
+  //     <AppCard
+  //       cardType="api"
+  //       appInfo={appDetail}
+  //       onChangeStatus={onChangeApiStatus}
+  //     />
+  //   </div>
+  // )
 }
 
 export default CardView

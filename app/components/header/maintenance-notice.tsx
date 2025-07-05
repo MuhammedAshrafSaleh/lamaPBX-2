@@ -24,16 +24,14 @@ const MaintenanceNotice = () => {
     return null
 
   return (
-    <div className='flex flex-col items-center p-4 w-full bg-[#FFFAEB] border-b border-[0.5px] border-b-[#FEF0C7] z-20'>
-      <div className='flex items-center justify-center w-full mb-2 px-2 h-[32px] bg-[#F79009] text-white text-[13px] font-medium rounded-xl'>
-        {titleByLocale[locale]}
-      </div>
+    <div className='shrink-0 flex items-center px-4 h-[38px] bg-[#FFFAEB] border-b border-[0.5px] border-b-[#FEF0C7] z-20'>
+      <div className='shrink-0 flex items-center mr-2 px-2 h-[22px] bg-[#F79009] text-white text-[11px] font-medium rounded-xl'>{titleByLocale[locale]}</div>
       {
         (NOTICE_I18N.href && NOTICE_I18N.href !== '#')
-          ? <div className='text-sm font-medium text-gray-700 cursor-pointer text-center' onClick={handleJumpNotice}>{descByLocale[locale]}</div>
-          : <div className='text-sm font-medium text-gray-700 text-center'>{descByLocale[locale]}</div>
+          ? <div className='grow text-xs font-medium text-gray-700 cursor-pointer' onClick={handleJumpNotice}>{descByLocale[locale]}</div>
+          : <div className='grow text-xs font-medium text-gray-700'>{descByLocale[locale]}</div>
       }
-      <X className='w-5 h-5 text-gray-500 cursor-pointer mt-2' onClick={handleCloseNotice} />
+      <X className='shrink-0 w-4 h-4 text-gray-500 cursor-pointer' onClick={handleCloseNotice} />
     </div>
   )
 }

@@ -176,10 +176,10 @@ const Header: FC = () => {
             <EnvButton disabled={nodesReadOnly} />
             <Divider type='vertical' className='h-3.5 mx-auto' />
             <RunAndHistory />
-            <Button className='text-components-button-secondary-text' onClick={handleShowFeatures}>
+            {/* <Button className='text-components-button-secondary-text' onClick={handleShowFeatures}>
               <RiApps2AddLine className='w-4 h-4 mr-1 text-components-button-secondary-text' />
               {t('workflow.common.features')}
-            </Button>
+            </Button> */}
             <AppPublisher
               {...{
                 publishedAt,

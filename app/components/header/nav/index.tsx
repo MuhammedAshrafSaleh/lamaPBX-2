@@ -37,19 +37,19 @@ const Nav = ({
   const isActivated = Array.isArray(activeSegment) ? activeSegment.includes(segment!) : segment === activeSegment
 
   return (
-    <div className='flex flex-col items-start space-y-2'>
+    <div className='flex items-start space-y-2'>
       <Link href={link} className='w-full'>
         <div
           onClick={() => setAppDetail()}
           className={classNames(`
-            flex flex-col items-start w-full px-2.5 py-2 cursor-pointer rounded-[10px]
+            flex items-start w-full px-2.5 py-2 cursor-pointer rounded-[10px]
             ${isActivated ? 'text-components-main-nav-nav-button-text-active bg-components-main-nav-nav-button-bg-active shadow-md font-semibold' : 'text-components-main-nav-nav-button-text'}
             ${curNav && isActivated && 'hover:bg-components-main-nav-nav-button-bg-active-hover'}
           `)}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <div className='mb-2'>
+          <div className=''>
             {
               (hovered && curNav)
                 ? <ArrowNarrowLeft className='w-4 h-4' />
@@ -58,7 +58,7 @@ const Nav = ({
                   : icon
             }
           </div>
-          <div>{text}</div>
+          <div className="ml-2">{text}</div>
         </div>
       </Link>
       {

@@ -236,7 +236,7 @@ export default function AccountPage() {
                       variant='ghost'
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     >
-                      {showCurrentPassword ? '👀' : '😝'}
+                      {showCurrentPassword ? '🔓' : '🔐'}
                     </Button>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export default function AccountPage() {
                   variant='ghost'
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? '👀' : '😝'}
+                  {showPassword ? '🔓' : '🔐'}
                 </Button>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function AccountPage() {
                   variant='ghost'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? '👀' : '😝'}
+                  {showConfirmPassword ? '🔓' : '🔐'}
                 </Button>
               </div>
             </div>

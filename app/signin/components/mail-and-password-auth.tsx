@@ -125,12 +125,7 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
     <div className='mb-3'>
       <label htmlFor="password" className="my-2 flex items-center justify-between">
         <span className='system-md-semibold text-text-secondary'>{t('login.password')}</span>
-        <Link
-          href={`/reset-password?${searchParams.toString()}`}
-          className={`system-xs-regular ${isEmailSetup ? 'text-components-button-secondary-accent-text' : 'text-components-button-secondary-accent-text-disabled pointer-events-none'}`}
-          tabIndex={isEmailSetup ? 0 : -1}
-          aria-disabled={!isEmailSetup}
-        >
+        <Link href={`/reset-password?${searchParams.toString()}`} className='system-xs-regular text-components-button-secondary-accent-text'>
           {t('login.forget')}
         </Link>
       </label>
@@ -152,9 +147,10 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
           <Button
             type="button"
             variant='ghost'
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => password && setShowPassword(!showPassword)}
+            className={!password ? 'opacity-50 pointer-events-none' : ''}
           >
-            {showPassword ? '👀' : '😝'}
+            {showPassword ? '🔓' : '🔐'}
           </Button>
         </div>
       </div>

@@ -85,7 +85,7 @@ const InstallForm = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="text-[32px] font-bold text-gray-900">{t('login.setAdminAccount')}</h2>
           <p className='
-          mt-1 text-sm text-black-600
+          mt-1 text-sm text-gray-600
         '>{t('login.setAdminAccountDesc')}</p>
         </div>
         <div className="grow mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -138,7 +138,7 @@ const InstallForm = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500"
                     >
-                       {showPassword ? '🔓' : '🔐'}  
+                      {showPassword ? '🔓' : '🔐'}
                     </button>
                   </div>
                 </div>
@@ -154,15 +154,6 @@ const InstallForm = () => {
                 </Button>
               </div>
             </form>
-            <div className="block w-full mt-2 text-xs text-gray-600">
-              {t('login.license.tip')}
-              &nbsp;
-              <Link
-                className='text-primary-600'
-                target='_blank' rel='noopener noreferrer'
-                href={'https://docs.dify.ai/user-agreement/open-source'}
-              >{t('login.license.link')}</Link>
-            </div>
           </div>
         </div>
       </>

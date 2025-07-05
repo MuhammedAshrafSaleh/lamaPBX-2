@@ -39,6 +39,12 @@ export default function NavLink({
   const isActive = href.toLowerCase().split('/')?.pop() === formattedSegment
   const NavIcon = isActive ? iconMap.selected : iconMap.normal
 
+ if (name === 'Logs & Ann.') {
+    return null
+  }
+
+
+  const displayName = name === 'Monitoring' ? 'Dashboard' : name
   return (
     <Link
       key={name}
@@ -48,7 +54,7 @@ export default function NavLink({
         'group flex items-center h-9 rounded-md py-2 text-sm font-normal',
         mode === 'expand' ? 'px-3' : 'px-2.5',
       )}
-      title={mode === 'collapse' ? name : ''}
+      title={mode === 'collapse' ? displayName : ''}
     >
       <NavIcon
         className={classNames(
@@ -57,7 +63,7 @@ export default function NavLink({
         )}
         aria-hidden="true"
       />
-      {mode === 'expand' && name}
+      {mode === 'expand' && displayName}
     </Link>
   )
 }

@@ -15,17 +15,13 @@ const HeaderWrapper = ({
 
   return (
     <div className={classNames(
-      //'sticky top-0 left-0 bottom-0 z-30 flex flex-row grow-0 shrink-0 basis-auto min-h-[56px]',
-      'fixed top-0 left-0 bottom-0 z-30 flex flex-row grow-0 shrink-0 basis-auto w-52 h-screen bg-white shadow-md',
+      'sticky top-0 left-0 right-0 z-30 flex flex-col grow-0 shrink-0 basis-auto min-h-[56px]',
       s.header,
-      isBordered ? 'border-r border-gray-200' : '',
+      isBordered ? 'border-b border-gray-200' : '',
     )}
     >
       {children}
     </div>
   )
 }
-export default HeaderWrapper     
-
-//'fixed top-0 left-0 bottom-0 z-30 flex flex-row grow-0 shrink-0 basis-auto w-64 h-screen bg-white shadow-md',
-//'fixed top-0 left-0 bottom-0 z-30 flex flex-row grow-0 shrink-0 basis-auto w-32 h-screen bg-white shadow-md', // تم تقليل العرض من w-64 إلى w-48
+export default HeaderWrapper

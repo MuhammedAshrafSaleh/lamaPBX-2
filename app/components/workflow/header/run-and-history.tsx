@@ -92,7 +92,6 @@ PreviewMode.displayName = 'PreviewMode'
 const RunAndHistory: FC = () => {
   const isChatMode = useIsChatMode()
   const { nodesReadOnly } = useNodesReadOnly()
-
   return (
     <div className='flex items-center px-0.5 h-8 rounded-lg border-[0.5px] border-components-button-secondary-border bg-components-button-secondary-bg shadow-xs'>
       {

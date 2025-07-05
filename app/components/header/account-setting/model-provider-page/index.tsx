@@ -35,11 +35,20 @@ const ModelProviderPage = () => {
   const { modelProviders: providers } = useProviderContext()
   const setShowModelModal = useModalContextSelector(state => state.setShowModelModal)
   const defaultModelNotConfigured = !textGenerationDefaultModel && !embeddingsDefaultModel && !speech2textDefaultModel && !rerankDefaultModel && !ttsDefaultModel
+
+  // Add list of providers to hide
+  const hiddenProviders = ['topstage', 'groqcloud'] // Add provider names you want to hide
+
   const [configuredProviders, notConfiguredProviders] = useMemo(() => {
     const configuredProviders: ModelProvider[] = []
     const notConfiguredProviders: ModelProvider[] = []
 
     providers.forEach((provider) => {
+      // Skip hidden providers
+      if (hiddenProviders.includes(provider.provider)) {
+        return
+      }
+
       if (
         provider.custom_configuration.status === CustomConfigurationStatusEnum.active
         || (
@@ -90,37 +99,40 @@ const ModelProviderPage = () => {
 
   return (
     <div className='relative pt-1 -mt-2'>
-      <div className={`flex items-center justify-between mb-2 h-8 ${defaultModelNotConfigured && 'px-3 bg-[#FFFAEB] rounded-lg border border-[#FEF0C7]'}`}>
+      <div className='flex items-center justify-between mb-2 h-8'>
         {
-          defaultModelNotConfigured
-            ? (
-              <div className='flex items-center text-xs font-medium text-gray-700'>
-                <AlertTriangle className='mr-1 w-3 h-3 text-[#F79009]' />
-                {t('common.modelProvider.notConfigured')}
-              </div>
-            )
-            : <div className='text-sm font-medium text-gray-800'>{t('common.modelProvider.models')}</div>
+          defaultModelNotConfigured && (
+            <div className='flex items-center px-3 bg-[#FFFAEB] rounded-lg border border-[#FEF0C7] text-xs font-medium text-gray-700'>
+              <AlertTriangle className='mr-1 w-3 h-3 text-[#F79009]' />
+              {t('common.modelProvider.notConfigured')}
+            </div>
+          )
         }
-        <SystemModelSelector
-          textGenerationDefaultModel={textGenerationDefaultModel}
-          embeddingsDefaultModel={embeddingsDefaultModel}
-          rerankDefaultModel={rerankDefaultModel}
-          speech2textDefaultModel={speech2textDefaultModel}
-          ttsDefaultModel={ttsDefaultModel}
-        />
+        <div className='flex-1'></div>
+        <div style={{ transform: 'scale(1.22)' }}>
+          <SystemModelSelector
+            textGenerationDefaultModel={textGenerationDefaultModel}
+            embeddingsDefaultModel={embeddingsDefaultModel}
+            rerankDefaultModel={rerankDefaultModel}
+            speech2textDefaultModel={speech2textDefaultModel}
+            ttsDefaultModel={ttsDefaultModel}
+          />
+        </div>
       </div>
       {
         !!configuredProviders?.length && (
           <div className='pb-3'>
-            {
-              configuredProviders?.map(provider => (
-                <ProviderAddedCard
-                  key={provider.provider}
-                  provider={provider}
-                  onOpenModal={(configurateMethod: ConfigurationMethodEnum, currentCustomConfigurationModelFixedFields?: CustomConfigurationModelFixedFields) => handleOpenModal(provider, configurateMethod, currentCustomConfigurationModelFixedFields)}
-                />
-              ))
-            }
+            <div className='grid grid-cols-2 gap-2'>
+              {
+                configuredProviders?.map(provider => (
+                  <ProviderAddedCard
+                    key={provider.provider}
+                    provider={provider}
+                    onOpenModal={(configurateMethod: ConfigurationMethodEnum, currentCustomConfigurationModelFixedFields?: CustomConfigurationModelFixedFields) => handleOpenModal(provider, configurateMethod, currentCustomConfigurationModelFixedFields)}
+                  />
+                ))
+              }
+            </div>
           </div>
         )
       }
@@ -128,20 +140,19 @@ const ModelProviderPage = () => {
         !!notConfiguredProviders?.length && (
           <>
             <div className='flex items-center mb-2 text-xs font-semibold text-gray-500'>
-              + {t('common.modelProvider.addMoreModelProvider')}
-              <span className='grow ml-3 h-[1px] bg-gradient-to-r from-[#f3f4f6]' />
+              <div className='grid grid-cols-2 gap-2'>
+                {
+                  notConfiguredProviders?.map(provider => (
+                    <ProviderCard
+                      key={provider.provider}
+                      provider={provider}
+                      onOpenModal={(configurateMethod: ConfigurationMethodEnum) => handleOpenModal(provider, configurateMethod)}
+                    />
+                  ))
+                }
+              </div>
             </div>
-            <div className='grid grid-cols-3 gap-2'>
-              {
-                notConfiguredProviders?.map(provider => (
-                  <ProviderCard
-                    key={provider.provider}
-                    provider={provider}
-                    onOpenModal={(configurateMethod: ConfigurationMethodEnum) => handleOpenModal(provider, configurateMethod)}
-                  />
-                ))
-              }
-            </div>
+
           </>
         )
       }

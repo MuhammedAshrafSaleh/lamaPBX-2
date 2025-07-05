@@ -66,25 +66,27 @@ const CredentialPanel: FC<CredentialPanelProps> = ({
     <>
       {
         provider.provider_credential_schema && (
-          <div className='shrink-0 relative ml-1 p-1 w-[112px] rounded-lg bg-white/[0.3] border-[0.5px] border-black/5'>
-            <div className='flex items-center justify-between mb-1 pt-1 pl-2 pr-[7px] h-5 text-xs font-medium text-gray-500'>
-              API-KEY
-              <Indicator color={isCustomConfigured ? 'green' : 'gray'} />
-            </div>
-            <div className='flex items-center gap-0.5'>
+          <div className='shrink-0 relative ml-1 p-1 w-[180px] rounded-lg bg-white/[0.3] border-[0.5px] border-black/5'>
+            <div className='flex items-center justify-between mb-2 pt-2 px-2 h-8 text-xs font-medium text-gray-500'>
               <Button
-                className='grow'
-                size='small'
+                size='medium'
                 onClick={onSetup}
+                className='mr-2 text-sm font-medium'
               >
-                <Settings01 className='mr-1 w-3 h-3' />
                 {t('common.operation.setup')}
               </Button>
+              <div className='flex items-center'>
+                <span>API-KEY</span>
+                <Indicator color={isCustomConfigured ? 'green' : 'gray'} className='ml-1' />
+              </div>
+            </div>
+            <div className='flex items-center gap-0.5 mt-1'>
               {
                 systemConfig.enabled && isCustomConfigured && (
                   <PrioritySelector
                     value={priorityUseType}
                     onSelect={handleChangePriority}
+                    className='grow'
                   />
                 )
               }

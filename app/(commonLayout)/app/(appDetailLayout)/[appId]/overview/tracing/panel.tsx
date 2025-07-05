@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePathname } from 'next/navigation'
 import { useBoolean } from 'ahooks'
-import type { LangFuseConfig, LangSmithConfig } from './type'
+import type { LangFuseConfig, LangSmithConfig, OpikConfig } from './type'
 import { TracingProvider } from './type'
 import TracingIcon from './tracing-icon'
 import ConfigButton from './config-button'
@@ -28,7 +28,7 @@ const Title = ({
 
   return (
     <div className={cn(className, 'flex items-center text-lg font-semibold text-gray-900')}>
-      {t('common.appMenus.overview')}
+      {/* {t('common.appMenus.overview')} */} Dashboard
     </div>
   )
 }
@@ -151,7 +151,7 @@ const Panel: FC = () => {
   return (
     <div className={cn('mb-3 flex justify-between items-center')}>
       <Title className='h-[41px]' />
-      <div className='flex items-center p-2 rounded-xl border-[0.5px] border-gray-200 shadow-xs cursor-pointer hover:bg-gray-100' onClick={showPopup}>
+      {/* <div className='flex items-center p-2 rounded-xl border-[0.5px] border-gray-200 shadow-xs cursor-pointer hover:bg-gray-100' onClick={showPopup}>
         {!inUseTracingProvider
           ? <>
             <TracingIcon size='md' className='mr-2' />
@@ -189,7 +189,7 @@ const Panel: FC = () => {
             controlShowPopup={controlShowPopup}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -32,6 +32,26 @@ type SystemModelSelectorProps = {
   speech2textDefaultModel: DefaultModelResponse | undefined
   ttsDefaultModel: DefaultModelResponse | undefined
 }
+
+// Enhanced Arrow Icon Component with smooth animation
+const AnimatedArrow: FC<{ isOpen: boolean }> = ({ isOpen }) => (
+  <svg
+    className={`w-3 h-3 text-gray-500 transition-transform duration-300 ease-in-out ${
+      isOpen ? 'rotate-180' : 'rotate-0'
+    }`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 9l6 6 6-6"
+    />
+  </svg>
+)
+
 const SystemModel: FC<SystemModelSelectorProps> = ({
   textGenerationDefaultModel,
   embeddingsDefaultModel,
@@ -70,6 +90,7 @@ const SystemModel: FC<SystemModelSelectorProps> = ({
 
     return undefined
   }
+  
   const handleChangeDefaultModel = (modelType: ModelTypeEnum, model: DefaultModel) => {
     if (modelType === ModelTypeEnum.textGeneration)
       changeCurrentTextGenerationDefaultModel(model)
@@ -85,6 +106,7 @@ const SystemModel: FC<SystemModelSelectorProps> = ({
     if (!changedModelTypes.includes(modelType))
       setChangedModelTypes([...changedModelTypes, modelType])
   }
+  
   const handleSave = async () => {
     const res = await updateDefaultModel({
       url: '/workspaces/current/default-model',
@@ -129,16 +151,21 @@ const SystemModel: FC<SystemModelSelectorProps> = ({
     >
       <PortalToFollowElemTrigger onClick={() => setOpen(v => !v)}>
         <div className={`
-          flex items-center px-2 h-6 text-xs text-gray-700 cursor-pointer bg-white rounded-md border-[0.5px] border-gray-200 shadow-xs
-          hover:bg-gray-100 hover:shadow-none
+          flex items-center justify-between px-2 h-6 text-xs text-gray-700 cursor-pointer bg-white rounded-md border-[0.5px] border-gray-200 shadow-xs
+          hover:bg-gray-100 hover:shadow-none transition-all duration-200 ease-in-out
           ${open && 'bg-gray-100 shadow-none'}
         `}>
-          <Settings01 className='mr-1 w-3 h-3 text-gray-500' />
-          {t('common.modelProvider.systemModelSettings')}
+          <div className="flex items-center">
+            <Settings01 className='mr-1 w-3 h-3 text-gray-500' />
+            {t('common.modelProvider.systemModelSettings')}
+          </div>
+          <AnimatedArrow isOpen={open} />
         </div>
       </PortalToFollowElemTrigger>
       <PortalToFollowElemContent className='z-50'>
-        <div className='pt-4 w-[360px] rounded-xl border-[0.5px] border-black/5 bg-white shadow-xl'>
+        <div className={`pt-4 w-[360px] rounded-xl border-[0.5px] border-black/5 bg-white shadow-xl transition-all duration-300 ease-out transform ${
+          open ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        }`}>
           <div className='px-6 py-1'>
             <div className='flex items-center h-8 text-[13px] font-medium text-gray-900'>
               {t('common.modelProvider.systemReasoningModel.key')}
