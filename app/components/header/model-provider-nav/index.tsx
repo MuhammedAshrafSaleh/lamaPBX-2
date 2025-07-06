@@ -22,7 +22,7 @@ const ModelProviderNav = ({
 
   return (
     <Link 
-      href="/model-provider" 
+      href="/model-provider-page" 
       className={classNames(
         className, 
         'group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200',

@@ -142,7 +142,78 @@ export default function AccountSetting({
     }
   }, [])
 
-  const activeItem = [...menuItems[0].items, ...menuItems[1].items].find(item => item.key === activeMenu)
+  // const activeItem = [...menuItems[0].items, ...menuItems[1].items].find(item => item.key === activeMenu)
+
+  // return (
+  //   <Modal
+  //     isShow
+  //     onClose={() => { }}
+  //     className={s.modal}
+  //     wrapperClassName='pt-[60px]'
+  //   >
+  //     <div className='flex'>
+  //       <div className='w-[44px] sm:w-[200px] px-[1px] py-4 sm:p-4 border border-gray-100 shrink-0 sm:shrink-1 flex flex-col items-center sm:items-start'>
+  //         <div className='mb-8 ml-0 sm:ml-2 text-sm sm:text-base font-medium leading-6 text-gray-900'>{t('common.userProfile.settings')}</div>
+  //         <div className='w-full'>
+  //           {
+  //             menuItems.map(menuItem => (
+  //               <div key={menuItem.key} className='mb-4'>
+  //                 {!isCurrentWorkspaceDatasetOperator && (
+  //                   <div className='px-2 mb-[6px] text-[10px] sm:text-xs font-medium text-gray-500'>{menuItem.name}</div>
+  //                 )}
+  //                 <div>
+  //                   {
+  //                     menuItem.items.map(item => (
+  //                       <div
+  //                         key={item.key}
+  //                         className={`
+  //                           flex items-center h-[37px] mb-[2px] text-sm cursor-pointer rounded-lg
+  //                           ${activeMenu === item.key ? 'font-semibold text-primary-600 bg-primary-50' : 'font-light text-gray-700'}
+  //                         `}
+  //                         title={item.name}
+  //                         onClick={() => setActiveMenu(item.key)}
+  //                       >
+  //                         {activeMenu === item.key ? item.activeIcon : item.icon}
+  //                         {!isMobile && <div className='truncate'>{item.name}</div>}
+  //                       </div>
+  //                     ))
+  //                   }
+  //                 </div>
+  //               </div>
+  //             ))
+  //           }
+  //         </div>
+  //       </div>
+  //       <div ref={scrollRef} className='relative w-[824px] h-[720px] pb-4 overflow-y-auto'>
+  //         <div className={cn('sticky top-0 px-6 py-4 flex items-center h-14 mb-4 bg-white text-base font-medium text-gray-900 z-20', scrolled && scrolledClassName)}>
+  //           <div className='shrink-0'>{activeItem?.name}</div>
+  //           {
+  //             activeItem?.description && (
+  //               <div className='shrink-0 ml-2 text-xs text-gray-600'>{activeItem?.description}</div>
+  //             )
+  //           }
+  //           <div className='grow flex justify-end'>
+  //             <div className='flex items-center justify-center -mr-4 w-6 h-6 cursor-pointer' onClick={onCancel}>
+  //               <RiCloseLine className='w-4 h-4 text-gray-400' />
+  //             </div>
+  //           </div>
+  //         </div>
+  //         <div className='px-4 sm:px-8 pt-2'>
+  //           {activeMenu === 'members' && <MembersPage />}
+  //           {activeMenu === 'billing' && <BillingPage />}
+  //           {activeMenu === 'language' && <LanguagePage />}
+  //           {activeMenu === 'provider' && <ModelProviderPage />}
+  //           {activeMenu === 'data-source' && <DataSourcePage />}
+  //           {activeMenu === 'api-based-extension' && <ApiBasedExtensionPage />}
+  //           {activeMenu === 'custom' && <CustomPage />}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </Modal>
+  // )
+  const activeItem = menuItems
+    .flatMap(group => group.items)
+    .find(item => item.key === 'provider');
 
   return (
     <Modal
@@ -153,43 +224,37 @@ export default function AccountSetting({
     >
       <div className='flex'>
         <div className='w-[44px] sm:w-[200px] px-[1px] py-4 sm:p-4 border border-gray-100 shrink-0 sm:shrink-1 flex flex-col items-center sm:items-start'>
-          <div className='mb-8 ml-0 sm:ml-2 text-sm sm:text-base font-medium leading-6 text-gray-900'>{t('common.userProfile.settings')}</div>
+          <div className='mb-8 ml-0 sm:ml-2 text-sm sm:text-base font-medium leading-6 text-gray-900'>
+            {t('common.userProfile.settings')}
+          </div>
           <div className='w-full'>
-            {
-              menuItems.map(menuItem => (
-                <div key={menuItem.key} className='mb-4'>
-                  {!isCurrentWorkspaceDatasetOperator && (
-                    <div className='px-2 mb-[6px] text-[10px] sm:text-xs font-medium text-gray-500'>{menuItem.name}</div>
-                  )}
-                  <div>
-                    {
-                      menuItem.items.map(item => (
-                        <div
-                          key={item.key}
-                          className={`
-                            flex items-center h-[37px] mb-[2px] text-sm cursor-pointer rounded-lg
-                            ${activeMenu === item.key ? 'font-semibold text-primary-600 bg-primary-50' : 'font-light text-gray-700'}
-                          `}
-                          title={item.name}
-                          onClick={() => setActiveMenu(item.key)}
-                        >
-                          {activeMenu === item.key ? item.activeIcon : item.icon}
-                          {!isMobile && <div className='truncate'>{item.name}</div>}
-                        </div>
-                      ))
-                    }
-                  </div>
+            <div className='mb-4'>
+              <div className='px-2 mb-[6px] text-[10px] sm:text-xs font-medium text-gray-500'>
+                {/* Optional: group title */}
+              </div>
+              <div>
+                <div
+                  key="provider"
+                  className={`
+                  flex items-center h-[37px] mb-[2px] text-sm cursor-pointer rounded-lg
+                  font-semibold text-primary-600 bg-primary-50
+                `}
+                  title="Model Provider"
+                >
+                  {activeItem?.activeIcon || activeItem?.icon}
+                  {!isMobile && <div className='truncate'>{activeItem?.name}</div>}
                 </div>
-              ))
-            }
+              </div>
+            </div>
           </div>
         </div>
+
         <div ref={scrollRef} className='relative w-[824px] h-[720px] pb-4 overflow-y-auto'>
           <div className={cn('sticky top-0 px-6 py-4 flex items-center h-14 mb-4 bg-white text-base font-medium text-gray-900 z-20', scrolled && scrolledClassName)}>
             <div className='shrink-0'>{activeItem?.name}</div>
             {
               activeItem?.description && (
-                <div className='shrink-0 ml-2 text-xs text-gray-600'>{activeItem?.description}</div>
+                <div className='shrink-0 ml-2 text-xs text-gray-600'>{activeItem.description}</div>
               )
             }
             <div className='grow flex justify-end'>
@@ -198,17 +263,12 @@ export default function AccountSetting({
               </div>
             </div>
           </div>
+
           <div className='px-4 sm:px-8 pt-2'>
-            {activeMenu === 'members' && <MembersPage />}
-            {activeMenu === 'billing' && <BillingPage />}
-            {activeMenu === 'language' && <LanguagePage />}
-            {activeMenu === 'provider' && <ModelProviderPage />}
-            {activeMenu === 'data-source' && <DataSourcePage />}
-            {activeMenu === 'api-based-extension' && <ApiBasedExtensionPage />}
-            {activeMenu === 'custom' && <CustomPage />}
+            <ModelProviderPage />
           </div>
         </div>
       </div>
     </Modal>
-  )
+  );
 }

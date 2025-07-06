@@ -21,6 +21,7 @@ import { fetchDatasetApiBaseUrl } from '@/service/datasets'
 import { useTabSearchParams } from '@/hooks/use-tab-searchparams'
 import { useStore as useTagStore } from '@/app/components/base/tag-management/store'
 import { useAppContext } from '@/context/app-context'
+import ModelProviderPage from '@/app/components/model-provider-page'
 
 const Container = () => {
   const { t } = useTranslation()
@@ -31,6 +32,7 @@ const Container = () => {
   const options = useMemo(() => {
     return [
       { value: 'dataset', text: t('dataset.datasets') },
+      // { value: 'model-provider', text: t('modelProvider.modelProviders') },
     ]
   }, [t])
 
@@ -75,13 +77,16 @@ const Container = () => {
       </div>
       {activeTab === 'dataset' && (
         <>
-          <Datasets containerRef={containerRef} tags={[]} keywords={searchKeywords} />
+          <Datasets containerRef={containerRef} tags={[]} keywords={searchKeywords} includeAll={false} />
           <DatasetFooter />
           {showTagManagementModal && (
             <TagManagementModal type='knowledge' show={showTagManagementModal} />
           )}
         </>
       )}
+      {/* {activeTab === 'model-provider' && (
+        <ModelProviderPage />
+      )} */}
     </div>
   )
 }
