@@ -3,8 +3,14 @@ import {
   useCallback,
   useState,
 } from 'react'
-import { useTranslation } from 'react-i18next'
+import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs'
+dayjs.extend(relativeTime);
+import { useTranslation } from 'react-i18next'
+import 'dayjs/locale/en';    // English
+import 'dayjs/locale/zh-cn'; // Chinese Simplified
+import 'dayjs/locale/de';    // German
+// Add others as needed
 import { RiArrowDownSLine, RiPlanetLine } from '@remixicon/react'
 import Toast from '../../base/toast'
 import type { ModelAndParameter } from '../configuration/debug/types'
@@ -69,9 +75,18 @@ const AppPublisher = ({
   const appURL = `${appBaseURL}/${appMode}/${accessToken}`
 
   const language = useGetLanguage()
-  const formatTimeFromNow = useCallback((time: number) => {
-    return dayjs(time).locale(language === 'zh_Hans' ? 'zh-cn' : language.replace('_', '-')).fromNow()
-  }, [language])
+  // const formatTimeFromNow = useCallback((time: number) => {
+  //   return dayjs(time).locale(language === 'zh_Hans' ? 'zh-cn' : language.replace('_', '-')).fromNow()
+  // }, [language])
+const formatTimeFromNow = useCallback((time: number) => {
+  const locale = language === 'zh_Hans' 
+    ? 'zh-cn' 
+    : language.replace(/_/g, '-');
+  
+  return dayjs(time)
+    .locale(locale || 'en')  // Ensure valid locale
+    .fromNow();
+}, [language]);
 
   const handlePublish = async (modelAndParameter?: ModelAndParameter) => {
     try {
